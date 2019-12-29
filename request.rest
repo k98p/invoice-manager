@@ -1,0 +1,26 @@
+GET http://localhost:3000/api/customers
+
+###
+
+POST http://localhost:3000/api/customers
+Content-Type: application/json
+
+{
+    "id": 2,
+    "name": "Kinjal",
+    "address": "Kolkata",
+    "phone": "98765432103"
+}
+
+###
+
+PUT http://localhost:3000/api/customers/1
+Content-Type: application/json
+
+{
+    "address": "Kolkata255"
+}
+
+###
+
+DELETE http://localhost:3000/api/customers/2

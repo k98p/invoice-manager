@@ -2,7 +2,7 @@
   "name": "invoice-manager",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js"
   },
@@ -11,14 +11,21 @@
     "url": "git+https://github.com/k98p/invoice-manager.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Kaustav Paul",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/k98p/invoice-manager/issues"
   },
   "homepage": "https://github.com/k98p/invoice-manager#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "bcryptjs": "^2.4.3",
+    "consolidate": "^0.15.1",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "handlebars": "^4.5.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.8.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
