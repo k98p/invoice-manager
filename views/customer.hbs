@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Customers</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+
+        <div class="container">
+            <div class = "add-div">
+                <button type="button" data-toggle="modal" data-target="#add-cust-form">+ADD</button>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John</td>
+                        <td>AE 97, Rabindrapally, Kestopur, Kolkata 700101</td>
+                        <td>john@example.com</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- The Modal -->
+            <div class="modal fade" id="add-cust-form">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add Customers</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <form name="add-cust">
+                                <div id="name-block">    
+                                    <label for="name">Customer Name</label>
+                                    <input type="text" placeholder="Cecilia Chapman" name="name">
+                                </div>
+                                <div id="address-block">
+                                    <label for="address">Address</label>
+                                    <input type="text" placeholder="" name="address">
+                                </div>
+                                
+                                <div id="phone-block">
+                                    <label for="phone">Phone</label>
+                                    <input type="text" placeholder="+91987654321" name="phone">
+                                </div>
+
+                                <div class="form-bottom">
+                                    <button type="button" onclick="add_cust(this.form)">SUBMIT</button>    
+                                </div>
+                                <div id = "result"></div>
+                            </form>
+                        </div>                
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            fetch('http://localhost:3000/api/customers/', {
+                method: 'GET',
+                headers: {
+                    //"authorization": `jwt ${accesstoken_stored}` 
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                
+                cust_data = document.getElementsByTagName("tbody")[0];
+                data.forEach((customer)=>{
+                    cust_data.innerHTML += `<tr>
+                                                <td>${customer.name}</td>
+                                                <td>${customer.address}</td>
+                                                <td>${customer.phone}</td>
+                                                <td></td>
+                                            </tr>`
+                })
+            })
+
+            function add_cust(frm){
+                fetch('http://localhost:3000/api/customers',{
+                    method: 'POST',
+                    body: JSON.stringify({
+                        "name": frm.name.value,
+                        "address": frm.address.value,
+                        "phone": frm.phone.value
+                    }),
+                    headers: {
+                        "Content-type": "application/json"
+                    }
+                }).then(res=>{
+                    return res.json()
+                })
+                .then((data)=>{
+                    document.getElementById("result").innerHTML = "<small>Customer added successfully!</small>"
+                })
+            }
+            
+        </script>
+    </body>
+</html>

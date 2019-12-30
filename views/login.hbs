@@ -10,29 +10,64 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     </head>
     <body>
-        <div class = "container" style="padding-top: 75px;">
+        <div class = "container">
 			<div id="form-div" class = "row">
-                <div class = "col col-lg-4"></div>
-                <form name="user-login" class = "col col-lg-4">
-					<div class = "row">
-						<input type="text" class="form-input form-control" name="userId" placeholder="UserID">
+                <form name="user-login">
+                    <h6>LOGIN</h6>
+                    <div id="user-block">    
+                        <label for="username">Username</label>
+                        <input type="text" placeholder="Type Your Name" name="username" required>
                     </div>
-                    <br>
-                    <div class = "row">
-                        <input type="password" class="form-input form-control" name="password" placeholder="Password">
+                    <div id="pass-block">
+                        <label for="password">Password</label>
+                        <input type="password" placeholder="********" name="password" required>
                     </div>
-                    <br>
-                    <div style="display: flex; justify-content: center;">        
-                        <button type="button" class = "btn btn-primary" onclick="signup(this.form)" style="margin-right: 10px;">SIGN UP</button>
                     
-                        <button type="button" class = "btn btn-primary" onclick="login(this.form)" style="margin-left: 10px;">LOGIN</button>
-                    
-					</div>
+                    <div class="form-bottom">
+                        <small><a href="/">Forgot password?</a></small>
+					    <button type="button" onclick="login(this.form)">LOGIN</button>    
+                    </div>
                 </form>
-                <div class = "col col-lg-4"></div>
-			</div>	
+			</div>
+            <div id="alert"></div>	
         </div>
-        <script src="login.js">
+        <script>
+            var alertbox = document.getElementById("alert")
+
+            function login(frm){
+                if (frm.username.value.length === 0 || frm.password.value.length === 0){
+                    alertbox.innerHTML = "Username or Password field cannot be empty"
+                }
+                else{
+                    fetch('http://localhost:3000/api/users/login',{
+                        method: 'POST',
+                        body: JSON.stringify({
+                            "username": frm.username.value,
+                            "password": frm.password.value
+                        }),
+                        headers: {
+                            "Content-type": "application/json"
+                        }
+                    }).then(res=>{
+                        if (res.status===403){
+                            alertbox.innerHTML = "Username does not exist"
+                        }
+                        else{
+                            return res.json()
+                        }
+                    })
+                    .then((data)=>{
+                            console.log(data)    
+                            if (data.token===null){
+                                alertbox.innerHTML = "You've entered a wrong password"
+                            }
+                            else{
+                                localStorage.setItem("token", data.token)
+                                window.location = "./customer";  
+                            }
+                        })
+                }
+            }
         </script>
     </body>
 </html>
