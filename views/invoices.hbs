@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Invoices</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class = "add-div">
+                <input type="button" value="ADD+" onclick="add_invoice()"></input>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer Name</th>
+                        <th>Discount</th>
+                        <th>Total</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <script>
+            fetch('http://localhost:3000/api/invoices/', {
+                method: 'GET',
+                headers: {
+                    //"authorization": `jwt ${accesstoken_stored}` 
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                //console.log(data);
+                let buffer = ""
+                let count = 0;
+                invoice_data = document.getElementsByTagName("tbody")[0];
+                data.forEach((invoice)=>{
+                    count++
+                    buffer +=   `<tr>
+                                    <td>${count}</td>
+                                    <td>${invoice.customer_id}</td>
+                                    <td>${invoice.discount}</td>
+                                    <td>${invoice.total}</td>
+                                    <td><i class="fas fa-edit" onclick="edit_form('${invoice._id}')"></i></td>
+                                </tr>`
+                })
+                invoice_data.innerHTML = buffer;
+            })
+
+            function add_invoice(){
+                window.location = "./invoice_list"
+            }
+
+        </script>
+    </body>
+</html>
+
+
+
+
+
+

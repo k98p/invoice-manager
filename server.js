@@ -67,7 +67,10 @@ app.post("/api/customers", (req, res)=>{
 })
 
 app.get("/api/customers/:id", (req, res)=>{
-    Customer.find({id: id}, (err, data)=>{
+    const id = req.params.id
+    console.log(id)
+    Customer.find({_id: id}, (err, data)=>{
+        console.log(data)
         res.json(data);
     })
 })
@@ -81,7 +84,7 @@ app.put("/api/customers/:id", (req, res)=>{
     //         res.json(data)
     //     })
     // })
-    Customer.findOneAndUpdate({id: id}, update, (err, data)=>{
+    Customer.findOneAndUpdate({_id: id}, update, (err, data)=>{
         res.json(data)
     })
     //best way...use a submit button in form to automatically reload
@@ -115,7 +118,8 @@ app.post("/api/products", (req, res)=>{
 })
 
 app.get("/api/products/:id", (req, res)=>{
-    Product.find({id: id}, (err, data)=>{
+    let id = req.params.id
+    Product.find({_id: id}, (err, data)=>{
         res.json(data);
     })
 })
@@ -123,14 +127,14 @@ app.get("/api/products/:id", (req, res)=>{
 app.put("/api/products/:id", (req, res)=>{
     let id = req.params.id
     let update = req.body
-    Product.findOneAndUpdate({id: id}, update, (err, data)=>{
+    Product.findOneAndUpdate({_id: id}, update, (err, data)=>{
         res.json(data)
     })
 })
 
 app.delete("/api/products/:id", (req, res)=>{
     let id = req.params.id
-    Product.remove({id: id}, (err, data)=>{
+    Product.remove({_id: id}, (err, data)=>{
         res.json(data)
     })
 })
@@ -186,13 +190,13 @@ app.post("/api/invoices/:invoice_id/items", (req, res)=>{
     })
 })
 
-app.get("/api/invoices/:id", (req, res)=>{
+app.get("/api/invoices/:invoice_id/items/:id", (req, res)=>{
     Invoice_item.find({id: id}, (err, data)=>{
         res.json(data);
     })
 })
 
-app.put("/api/invoices/:id", (req, res)=>{
+app.put("/api/invoices/:invoice_id/items/:id", (req, res)=>{
     let id = req.params.id
     let update = req.body
     Invoice_item.findOneAndUpdate({id: id}, update, (err, data)=>{
@@ -200,7 +204,7 @@ app.put("/api/invoices/:id", (req, res)=>{
     })
 })
 
-app.delete("/api/invoices/:id", (req, res)=>{
+app.delete("/api/invoices/:invoice_id/items/:id", (req, res)=>{
     let id = req.params.id
     Invoice_item.remove({id: id}, (err, data)=>{
         res.json(data)
@@ -271,6 +275,18 @@ app.get("/login", (req, res)=>{
 
 app.get("/customer", (req, res)=>{
     res.render('customer')
+})
+
+app.get("/products", (req, res)=>{
+    res.render('products')
+})
+
+app.get("/invoices", (req, res)=>{
+    res.render('invoices')
+})
+
+app.get("/invoice_list", (req, res)=>{
+    res.render('invoice_list')
 })
 
 const server = app.listen(3000, ()=>{

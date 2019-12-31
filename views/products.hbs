@@ -1,7 +1,8 @@
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Customers</title>
+        <title>Products</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -14,14 +15,13 @@
         <div class="container">
             
             <div class = "add-div">
-                <button type="button" data-toggle="modal" data-target="#add-cust-form">+ADD</button>
+                <button type="button" data-toggle="modal" data-target="#add-prod-form">+ADD</button>
             </div>
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Customer Name</th>
-                        <th>Address</th>
-                        <th>Phone</th>
+                        <th>Product Name</th>
+                        <th>Price</th>
                         <th>Edit</th>
                     </tr>
                 </thead>
@@ -29,36 +29,31 @@
                 </tbody>
             </table>
 
-            <!-- The Modal for adding customer-->
-            <div class="modal fade" id="add-cust-form">
+            <!-- The Modal for adding product-->
+            <div class="modal fade" id="add-prod-form">
                 <div class="modal-dialog">
                     <div class="modal-content">
                     
                         <!-- Modal Header -->
                         <div class="modal-header">
-                            <h4 class="modal-title">Add Customers</h4>
+                            <h4 class="modal-title">Add Products</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         
                         <!-- Modal body -->
                         <div class="modal-body">
-                            <form name="add-cust">
+                            <form name="add-prod">
                                 <div id="name-block">    
-                                    <label for="name">Customer Name</label>
+                                    <label for="name">Product Name</label>
                                     <input type="text" placeholder="Cecilia Chapman" name="name">
                                 </div>
-                                <div id="address-block">
-                                    <label for="address">Address</label>
-                                    <input type="text" placeholder="" name="address">
-                                </div>
-                                
-                                <div id="phone-block">
-                                    <label for="phone">Phone</label>
-                                    <input type="text" placeholder="+91987654321" name="phone">
+                                <div id="price-block">
+                                    <label for="price">Price</label>
+                                    <input type="text" placeholder="" name="price">
                                 </div>
 
                                 <div class="form-bottom">
-                                    <button type="button" onclick="add_cust(this.form)">SUBMIT</button>    
+                                    <button type="button" onclick="add_prod(this.form)">SUBMIT</button>    
                                 </div>
                                 <div id = "result_add"></div>
                             </form>
@@ -67,40 +62,36 @@
                 </div>
             </div>
 
-            <!-- The Modal for editing customer-->
-            <div class="modal fade" id="edit-cust-form">
+            <!-- The Modal for editing product-->
+            <div class="modal fade" id="edit-prod-form">
                 <div class="modal-dialog">
                     <div class="modal-content">
                     
                         <!-- Modal Header -->
                         <div class="modal-header">
-                            <h4 class="modal-title">Edit Customers</h4>
+                            <h4 class="modal-title">Edit Products</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         
                         <!-- Modal body -->
                         <div class="modal-body">
-                            <form name="edit-cust">
+                            <form name="edit-prod">
                                 <div id="id-block">    
-                                    <label for="id">Customer Id</label>
+                                    <label for="id">Product Id</label>
                                     <p type="text" id = "edit_id" name="id"></p>
                                 </div>
                                 <div id="name-block">    
-                                    <label for="name">Customer Name</label>
+                                    <label for="name">Product Name</label>
                                     <input type="text" id = "edit_name" name="name">
                                 </div>
-                                <div id="address-block">
-                                    <label for="address">Address</label>
-                                    <input type="text" id = "edit_add" name="address">
+                                <div id="price-block">
+                                    <label for="price">Price</label>
+                                    <input type="text" id = "edit_price" name="price">
                                 </div>
-                                
-                                <div id="phone-block">
-                                    <label for="phone">Phone</label>
-                                    <input type="text" id = "edit_phone" name="phone">
-                                </div>
+            
 
                                 <div class="form-bottom">
-                                    <input type="button" value="SUBMIT" onclick="edit_cust(this.form)">    
+                                    <input type="button" value="SUBMIT" onclick="edit_prod(this.form)">    
                                 </div>
                                 <div id = "result_edit"></div>
                             </form>
@@ -113,7 +104,7 @@
         
         <script>
             function fetchall(){
-                fetch('http://localhost:3000/api/customers/', {
+                fetch('http://localhost:3000/api/products/', {
                     method: 'GET',
                     headers: {
                         //"authorization": `jwt ${accesstoken_stored}` 
@@ -124,17 +115,16 @@
                     //console.log(data);
                     let count = 0;
                     let buffer = ""
-                    cust_data = document.getElementsByTagName("tbody")[0];
-                    data.forEach((customer)=>{
+                    prod_data = document.getElementsByTagName("tbody")[0];
+                    data.forEach((product)=>{
                         count++;
                         buffer +=   `<tr>
-                                        <td>${customer.name}</td>
-                                        <td>${customer.address}</td>
-                                        <td>${customer.phone}</td>
-                                        <td><i class="fas fa-edit" data-toggle="modal" data-target="#edit-cust-form" onclick="edit_form('${customer._id}')"></i></td>
+                                        <td>${product.name}</td>
+                                        <td>${product.price}</td>
+                                        <td><i class="fas fa-edit" data-toggle="modal" data-target="#edit-prod-form" onclick="edit_form('${product._id}')"></i></td>
                                     </tr>`
                     })
-                    cust_data.innerHTML = buffer;
+                    prod_data.innerHTML = buffer;
                 })
             }
             
@@ -142,7 +132,7 @@
 
             function edit_form(id){
                 console.log("working" + id)
-                fetch('http://localhost:3000/api/customers/'+id , {
+                fetch('http://localhost:3000/api/products/'+id , {
                     method: 'GET'
                 }).then(res=>{
                     return res.json()
@@ -150,20 +140,18 @@
                     //console.log(data)
                     document.getElementById("edit_id").innerHTML = data[0]._id
                     document.getElementById("edit_name").value = data[0].name
-                    document.getElementById("edit_add").value = data[0].address
-                    document.getElementById("edit_phone").value = data[0].phone
+                    document.getElementById("edit_price").value = data[0].price
                 })
             }
 
-            function edit_cust(frm){
+            function edit_prod(frm){
                 const id = document.getElementById("edit_id").innerHTML
                 //console.log(id)
-                fetch('http://localhost:3000/api/customers/' + id ,{
+                fetch('http://localhost:3000/api/products/' + id ,{
                     method: 'PUT',
                     body: JSON.stringify({
                         "name": frm.name.value,
-                        "address": frm.address.value,
-                        "phone": frm.phone.value
+                        "price": frm.price.value
                     }),
                     headers: {
                         "Content-type": "application/json"
@@ -172,19 +160,18 @@
                     return res.json()
                 })
                 .then((data)=>{
-                    document.getElementById("result_edit").innerHTML = "<small>Customer edited successfully!</small>"
+                    document.getElementById("result_edit").innerHTML = "<small>Product edited successfully!</small>"
                     setTimeout(()=>{document.getElementById("result_edit").innerHTML = ""}, 3000)
                     fetchall()
                 })
             }
 
-            function add_cust(frm){
-                fetch('http://localhost:3000/api/customers',{
+            function add_prod(frm){
+                fetch('http://localhost:3000/api/products',{
                     method: 'POST',
                     body: JSON.stringify({
                         "name": frm.name.value,
-                        "address": frm.address.value,
-                        "phone": frm.phone.value
+                        "price": frm.price.value
                     }),
                     headers: {
                         "Content-type": "application/json"
@@ -193,7 +180,7 @@
                     return res.json()
                 })
                 .then((data)=>{
-                    document.getElementById("result_add").innerHTML = "<small>Customer added successfully!</small>"
+                    document.getElementById("result_add").innerHTML = "<small>Product added successfully!</small>"
                     setTimeout(()=>{document.getElementById("result_add").innerHTML = ""}, 3000)
                     fetchall()
                 })
@@ -202,3 +189,9 @@
         </script>
     </body>
 </html>
+
+
+
+
+
+
