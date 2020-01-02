@@ -24,15 +24,16 @@ var productSchema = mongoose.Schema({
 
 var invoiceSchema = mongoose.Schema({
     //id: Number,
-    customer_id: Number,
+    customer_name: String,
+    customer_id: String,
     discount: Number,
     total: Number
 })
 
 var invoiceitemSchema = mongoose.Schema({
     //id: Number,
-    invoice_id: Number,
-    product_id: Number,
+    invoice_id: String,
+    product_id: String,
     quantity: Number
 })
 

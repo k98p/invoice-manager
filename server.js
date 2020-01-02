@@ -149,13 +149,14 @@ app.get("/api/invoices", (req, res)=>{
 
 app.post("/api/invoices", (req, res)=>{
     let invoice = req.body
+    console.log(invoice)
     Invoice.create(invoice, (err, data)=>{
         res.json(data)
     })
 })
 
 app.get("/api/invoices/:id", (req, res)=>{
-    Invoice.find({id: id}, (err, data)=>{
+    Invoice.find({_id: id}, (err, data)=>{
         res.json(data);
     })
 })
@@ -163,7 +164,8 @@ app.get("/api/invoices/:id", (req, res)=>{
 app.put("/api/invoices/:id", (req, res)=>{
     let id = req.params.id
     let update = req.body
-    Invoice.findOneAndUpdate({id: id}, update, (err, data)=>{
+    Invoice.findOneAndUpdate({_id: id}, update, (err, data)=>{
+        console.log(data)
         res.json(data)
     })
 })
@@ -185,6 +187,7 @@ app.get("/api/invoices/:invoice_id/items", (req, res)=>{
 
 app.post("/api/invoices/:invoice_id/items", (req, res)=>{
     let invoice = req.body
+    console.log(invoice)
     Invoice_item.create(invoice, (err, data)=>{
         res.json(data)
     })

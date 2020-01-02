@@ -22,7 +22,7 @@
                 
                     <div id="discount-block">
                         <label for="discount">Discount</label>
-                        <input type="text" name="discount">
+                        <input type="text" id="discount_field" name="discount">
                     </div>
                 </form>
             </div>
@@ -30,6 +30,7 @@
             <input type="button" value="ADD+" onclick="add_invoice_item()">
             <hr>
             <div id="invoice-items-forms-div"></div>
+            <div id="total_value"></div>
         </div>
 
         <script>
@@ -45,23 +46,139 @@
                 let names_option = document.getElementById('customer_names')
                 let buffer = ""
                 data.forEach((customer)=>{
-                    buffer += `<option value="${customer._id}">${customer.name}</option>`
+                    buffer += `<option value="${customer._id} ${customer.name}">${customer.name}</option>`
                 })
                 names_option.innerHTML = buffer;
             })
 
+            let product_buffer = ""
+
+            fetch('http://localhost:3000/api/products/', {
+                method: 'GET',
+                headers: {
+                    //"authorization": `jwt ${accesstoken_stored}` 
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                //console.log(data);
+                data.forEach((product)=>{
+                    product_buffer += `<option value="${product._id}">${product.name}</option>`
+                    localStorage.setItem(product._id, product.price)
+                })
+            })
+
+            let invoice_id;
+
             function add_invoice_item(){
-                <form name="invoice-items-details">
-                    <div id="name-block">    
-                        <label for="name">Product Name</label>
-                        <select name="name" id="product_names"></select>
-                    </div>
+                let form_list = document.getElementById("invoice-items-forms-div");
+                if (form_list.innerHTML===""){
+
+                    let cus_details = document.getElementById("customer_names").value
+                    let cus_id = cus_details.split(' ')[0]
+                    let cus_name = cus_details.split(' ')[1]
+                    
+                    let disc_val = document.getElementById("discount_field").value
+                    if (cus_name!=="" && (disc_val>=0 && disc_val<=100)){
+                        fetch('http://localhost:3000/api/invoices/', {
+                            method: 'POST',
+                            headers: {
+                                "Content-type": "application/json; charset=UTF-8"   
+                                //"authorization": `jwt ${accesstoken_stored}` 
+                            },
+                            body: JSON.stringify({
+                                "customer_name": cus_name,
+                                "customer_id": cus_id,
+                                "discount": disc_val
+                            })
+                            
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            invoice_id = data._id
+                        })
+
+                        form_list.innerHTML +=  `<form name="invoice-items-details">
+                                                    <div class="name-block">    
+                                                        <label for="prod_name">Product Name</label>
+                                                        <select name="prod_name" class="product_names">${product_buffer}</select>
+                                                    </div>
+                                                
+                                                    <div class="quantity-block">
+                                                        <label for="quantity">Quantity</label>
+                                                        <input type="text" name="quantity">
+                                                    </div>
+
+                                                    <div class="submit-block">
+                                                        <input type="button" value="SELECT" onclick = "submit_invoice_item(this.form)">
+                                                    </div>
+
+                                                </form>`
+                    }
+                    else{
+                        alert("Customer Name cannot be empty and discount value should be between 0 and 100 inclusive")
+                    }
+                    document.getElementById("discount_field").setAttribute('readonly', true)
+                }
+                else{
+                    console.log(invoice_id)
+                    form_list.innerHTML +=  `<form name="invoice-items-details">
+                                                <div id="name-block">    
+                                                    <label for="prod_name">Product Name</label>
+                                                    <select name="prod_name" class="product_names">${product_buffer}</select>
+                                                </div>
+                                            
+                                                <div id="quantity-block">
+                                                    <label for="quantity">Quantity</label>
+                                                    <input type="text" name="quantity">
+                                                </div>
+
+                                                <div class="submit-block">
+                                                    <input type="button" value="SELECT" onclick = "submit_invoice_item(this.form)">
+                                                </div>
+                                            </form>`
+                    
+                }
                 
-                    <div id="quantity-block">
-                        <label for="quantity">Quantity</label>
-                        <input type="text" name="quantity">
-                    </div>
-                </form>
+            }
+
+            function submit_invoice_item(frm){
+                fetch('http://localhost:3000/api/invoices/' + invoice_id + '/items',{
+                    method: 'POST',
+                    body: JSON.stringify({
+                        "invoice_id": invoice_id,
+                        "product_id": frm.prod_name.value,
+                        "quantity": frm.quantity.value
+                    }),
+                    headers: {
+                        "Content-type": "application/json"
+                    }
+                }).then(res=>{
+                    return res.json()
+                })
+                .then((data)=>{
+                    console.log(data)
+                    document.getElementById("total_value").innerHTML = +document.getElementById("total_value").innerHTML + +localStorage.getItem(data.product_id)*data.quantity
+                
+                })
+            }
+
+            function add_invoice(){
+                fetch('http://localhost:3000/api/invoices/' + invoice_id, {
+                    method: 'PUT',
+                    headers: {
+                        "Content-type": "application/json"
+                        //"authorization": `jwt ${accesstoken_stored}` 
+                    },
+                    body: JSON.stringify({
+                        "total": +document.getElementById("total_value").innerHTML
+                    })
+                    
+                })
+                .then(res => res.json())
+                .then(data => {
+                    window.location = './invoices'
+                })
             }
 
         </script>
