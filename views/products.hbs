@@ -10,17 +10,102 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <style>
+
+            html,body {
+                font-family: 'Roboto', san-serif;
+                font-style: normal;
+                font-size: 16px;
+                
+            }
+            .add_button{
+                width: 84px;
+                height: 50px;
+                background: linear-gradient(180deg, #DC2C2C 0%, #FF3B3C 99.99%, rgba(183, 27, 27, 0) 100%);
+                border: none;
+                color: #FFFFFF;
+            }
+
+            .submit_button{
+                width: 100px;
+                height: 50px;
+                background: linear-gradient(180deg, #DC2C2C 0%, #FF3B3C 99.99%, rgba(183, 27, 27, 0) 100%);
+                border: none;
+                color: #FFFFFF;
+            }
+
+            .prod-head{
+                background-color: #DC2C2C;
+                color: #FFFFFF;
+            }
+
+            input{
+                padding-left: 10px;
+                width: 100%;
+                height: 45px;
+            }
+
+            label{
+                font-weight: bold;
+            }
+
+            a{
+                font-weight: bold;
+            }
+
+            .activated{
+                color: #D20606;
+            }
+
+            tr:nth-child(even) {background-color: #FFD4D4;}
+
+            thead{
+                background-color: #DC2C2C;
+                color: #FFFFFF;
+            }
+
+            .edit{
+                border: none;
+                background-color: transparent;
+            }
+
+        </style>
     </head>
     <body>
+
         <div class="container">
-            
-            <div class = "add-div">
-                <button type="button" data-toggle="modal" data-target="#add-prod-form">+ADD</button>
+            <header>
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="#"><img src="static/images/logo.png" height="46px" width="46px" alt="Itobuz"></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <span class="w-100"></span>
+                    <div class="collapse navbar-collapse navbarSupportedContent">
+                        <ul class="navbar-nav">
+                            <li class="nav-item px-2 active">
+                                <a class="nav-link" href="products">Products</a>
+                            </li>
+                            <li class="nav-item px-2">
+                                <a class="nav-link " href="customers">Customers</a>
+                            </li>
+                            <li class="nav-item px-2">
+                                <a class="nav-link" href="invoices">Invoices</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            <hr class="my-0">
+
+            <div class = "add-div py-4 text-right pr-4">
+                <button type="button" class="add_button" data-toggle="modal" data-target="#add-prod-form">Add+</button>
             </div>
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Product Name</th>
+                        <th class="pl-4">Product Name</th>
                         <th>Price</th>
                         <th>Edit</th>
                     </tr>
@@ -35,27 +120,39 @@
                     <div class="modal-content">
                     
                         <!-- Modal Header -->
-                        <div class="modal-header">
-                            <h4 class="modal-title">Add Products</h4>
+                        <div class="modal-header prod-head">
+                            <h6 class="modal-title">Add Products</h6>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         
                         <!-- Modal body -->
-                        <div class="modal-body">
+                        <div class="modal-body px-4 py-4">
                             <form name="add-prod">
-                                <div id="name-block">    
-                                    <label for="name">Product Name</label>
-                                    <input type="text" placeholder="Cecilia Chapman" name="name">
+                                <div id="name-block">
+                                    <div class="col-md-12">
+                                        <label for="name">Product Name</label>
+                                    </div>    
+                                    
+                                    <div class="col-md-12">
+                                        <input type="text" placeholder="Product" name="name">
+                                    </div>
+                                    
                                 </div>
-                                <div id="price-block">
-                                    <label for="price">Price</label>
-                                    <input type="text" placeholder="" name="price">
+                                <div id="price-block" class="pt-3">
+                                    <div class="col-md-12">
+                                        <label for="price">Price</label>
+                                    </div>
+                                    
+                                    <div class="col-md-12">
+                                        <input type="number" placeholder="10" name="price">
+                                    </div>
+                                    
                                 </div>
 
-                                <div class="form-bottom">
-                                    <button type="button" onclick="add_prod(this.form)">SUBMIT</button>    
+                                <div class="form-bottom text-center pt-4">
+                                    <button type="button" class="submit_button" onclick="add_prod(this.form)">SUBMIT</button>    
                                 </div>
-                                <div id = "result_add"></div>
+                                <div id = "result_add" class="text-center col-md-12 pt-3"></div>
                             </form>
                         </div>                
                     </div>
@@ -68,32 +165,50 @@
                     <div class="modal-content">
                     
                         <!-- Modal Header -->
-                        <div class="modal-header">
-                            <h4 class="modal-title">Edit Products</h4>
+                        <div class="modal-header prod-head">
+                            <h6 class="modal-title">Edit Product</h6>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         
                         <!-- Modal body -->
-                        <div class="modal-body">
+                        <div class="modal-body px-4 py-4">
                             <form name="edit-prod">
-                                <div id="id-block">    
-                                    <label for="id">Product Id</label>
-                                    <p type="text" id = "edit_id" name="id"></p>
+                                <div id="id-block" class="row">
+                                    <div class="col-md-12">
+                                        <label for="id">Product Id</label>
+                                    </div>    
+                                    
+                                    <div class="col-md-12">
+                                        <p type="text" id = "edit_id" name="id"></p>
+                                    </div>
+                                    
                                 </div>
-                                <div id="name-block">    
-                                    <label for="name">Product Name</label>
-                                    <input type="text" id = "edit_name" name="name">
+                                <div id="name-block" class="pt-3"> 
+                                    <div class="col-md-12">
+                                        <label for="name">Product Name</label>
+                                    </div>   
+                                    
+                                    <div class="col-md-12">
+                                        <input type="text" id = "edit_name" name="name">
+                                    </div>
+                                    
                                 </div>
-                                <div id="price-block">
-                                    <label for="price">Price</label>
-                                    <input type="text" id = "edit_price" name="price">
+                                <div id="price-block" class="pt-3">
+                                    <div class="col-md-12">
+                                        <label for="price">Price</label>
+                                    </div>
+                                    
+                                    <div class="col-md-12">
+                                        <input type="text" id = "edit_price" name="price">
+                                    </div>
+                                    
                                 </div>
             
 
-                                <div class="form-bottom">
-                                    <input type="button" value="SUBMIT" onclick="edit_prod(this.form)">    
+                                <div class="form-bottom text-center pt-4">
+                                    <button type="button" class="submit_button" onclick="edit_prod(this.form)">Submit</button>
                                 </div>
-                                <div id = "result_edit"></div>
+                                <div id = "result_edit" class="text-center col-md-12 pt-3"></div>
                             </form>
                         </div>                
                     </div>
@@ -102,92 +217,9 @@
         </div>
 
         
-        <script>
-            function fetchall(){
-                fetch('http://localhost:3000/api/products/', {
-                    method: 'GET',
-                    headers: {
-                        //"authorization": `jwt ${accesstoken_stored}` 
-                    }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    //console.log(data);
-                    let count = 0;
-                    let buffer = ""
-                    prod_data = document.getElementsByTagName("tbody")[0];
-                    data.forEach((product)=>{
-                        count++;
-                        buffer +=   `<tr>
-                                        <td>${product.name}</td>
-                                        <td>${product.price}</td>
-                                        <td><i class="fas fa-edit" data-toggle="modal" data-target="#edit-prod-form" onclick="edit_form('${product._id}')"></i></td>
-                                    </tr>`
-                    })
-                    prod_data.innerHTML = buffer;
-                })
-            }
-            
-            fetchall();
-
-            function edit_form(id){
-                console.log("working" + id)
-                fetch('http://localhost:3000/api/products/'+id , {
-                    method: 'GET'
-                }).then(res=>{
-                    return res.json()
-                }).then((data)=>{
-                    //console.log(data)
-                    document.getElementById("edit_id").innerHTML = data[0]._id
-                    document.getElementById("edit_name").value = data[0].name
-                    document.getElementById("edit_price").value = data[0].price
-                })
-            }
-
-            function edit_prod(frm){
-                const id = document.getElementById("edit_id").innerHTML
-                //console.log(id)
-                fetch('http://localhost:3000/api/products/' + id ,{
-                    method: 'PUT',
-                    body: JSON.stringify({
-                        "name": frm.name.value,
-                        "price": frm.price.value
-                    }),
-                    headers: {
-                        "Content-type": "application/json"
-                    }
-                }).then(res=>{
-                    return res.json()
-                })
-                .then((data)=>{
-                    document.getElementById("result_edit").innerHTML = "<small>Product edited successfully!</small>"
-                    setTimeout(()=>{document.getElementById("result_edit").innerHTML = ""}, 3000)
-                    fetchall()
-                })
-            }
-
-            function add_prod(frm){
-                fetch('http://localhost:3000/api/products',{
-                    method: 'POST',
-                    body: JSON.stringify({
-                        "name": frm.name.value,
-                        "price": frm.price.value
-                    }),
-                    headers: {
-                        "Content-type": "application/json"
-                    }
-                }).then(res=>{
-                    return res.json()
-                })
-                .then((data)=>{
-                    document.getElementById("result_add").innerHTML = "<small>Product added successfully!</small>"
-                    setTimeout(()=>{document.getElementById("result_add").innerHTML = ""}, 3000)
-                    fetchall()
-                })
-            }
-            
-        </script>
+        
     </body>
+    <script src="static/scripts/products.js"></script>
 </html>
 
 

@@ -12,6 +12,7 @@ app.use(express.json())
 app.engine('hbs', engines.handlebars)
 app.set('views', './views')
 app.set('view engine', 'hbs')
+app.use("/static", express.static('./static/'))
 
 
 const User = require('./db').User
@@ -24,27 +25,16 @@ function isAuthenticated(req, res, next) {
     if (typeof req.headers.authorization !== "undefined") {
         let token = req.headers.authorization.split(" ")[1];
         let privateKey = process.env.ACCESS_TOKEN;
-        // console.log(token);
-        // Here we validate that the JSON Web Token is valid and has been
-        // created using the same private pass phrase
         jwt.verify(token, privateKey, (err, user) => {
-
-            // if there has been an error...
             if (err) {
-                // shut them out!
                 res.status(500).json({ error: "Not Authorized" });
-                // throw new Error("Not Authorized");
             }
-            // if the JWT is valid, allow them to hit
-            // the intended endpoint
             req.user = user;
             next();
         });
     } else {
-        // No authorization header exists on the incoming
-        // request, return not authorized and throw a new error
         res.status(500).json({ error: "Not Authorized" });
-        // throw new Error("Not Authorized");
+        
     }
 }
 
@@ -52,13 +42,13 @@ function isAuthenticated(req, res, next) {
 
 //CUSTOMERS
 
-app.get("/api/customers", (req, res)=>{
+app.get("/api/customers", isAuthenticated, (req, res)=>{
     Customer.find({}, (err, data)=>{
         res.json(data);
     })
 })
 
-app.post("/api/customers", (req, res)=>{
+app.post("/api/customers", isAuthenticated, (req, res)=>{
     let customer = req.body
     console.log(customer)
     Customer.create(customer, (err, data)=>{
@@ -66,7 +56,7 @@ app.post("/api/customers", (req, res)=>{
     })
 })
 
-app.get("/api/customers/:id", (req, res)=>{
+app.get("/api/customers/:id", isAuthenticated, (req, res)=>{
     const id = req.params.id
     console.log(id)
     Customer.find({_id: id}, (err, data)=>{
@@ -75,7 +65,7 @@ app.get("/api/customers/:id", (req, res)=>{
     })
 })
 
-app.put("/api/customers/:id", (req, res)=>{
+app.put("/api/customers/:id", isAuthenticated, (req, res)=>{
     let id = req.params.id
     let update = req.body
 
@@ -90,7 +80,7 @@ app.put("/api/customers/:id", (req, res)=>{
     //best way...use a submit button in form to automatically reload
 })
 
-app.delete("/api/customers/:id", (req, res)=>{
+app.delete("/api/customers/:id", isAuthenticated, (req, res)=>{
     let id = req.params.id
     Customer.remove({id: id}, (err, data)=>{
         res.json(data)
@@ -104,27 +94,27 @@ app.delete("/api/customers/:id", (req, res)=>{
 
 //PRODUCTS
 
-app.get("/api/products", (req, res)=>{
+app.get("/api/products", isAuthenticated, (req, res)=>{
     Product.find({}, (err, data)=>{
         res.json(data);
     })
 })
 
-app.post("/api/products", (req, res)=>{
+app.post("/api/products", isAuthenticated, (req, res)=>{
     let product = req.body
     Product.create(product, (err, data)=>{
         res.json(data)
     })
 })
 
-app.get("/api/products/:id", (req, res)=>{
+app.get("/api/products/:id", isAuthenticated, (req, res)=>{
     let id = req.params.id
     Product.find({_id: id}, (err, data)=>{
         res.json(data);
     })
 })
 
-app.put("/api/products/:id", (req, res)=>{
+app.put("/api/products/:id", isAuthenticated, (req, res)=>{
     let id = req.params.id
     let update = req.body
     Product.findOneAndUpdate({_id: id}, update, (err, data)=>{
@@ -132,7 +122,7 @@ app.put("/api/products/:id", (req, res)=>{
     })
 })
 
-app.delete("/api/products/:id", (req, res)=>{
+app.delete("/api/products/:id", isAuthenticated, (req, res)=>{
     let id = req.params.id
     Product.remove({_id: id}, (err, data)=>{
         res.json(data)
@@ -202,21 +192,21 @@ app.get("/api/invoices/:invoice_id/items/:id", (req, res)=>{
 app.put("/api/invoices/:invoice_id/items/:id", (req, res)=>{
     let id = req.params.id
     let update = req.body
-    Invoice_item.findOneAndUpdate({id: id}, update, (err, data)=>{
+    Invoice_item.findOneAndUpdate({_id: id}, update, (err, data)=>{
         res.json(data)
     })
 })
 
 app.delete("/api/invoices/:invoice_id/items/:id", (req, res)=>{
     let id = req.params.id
-    Invoice_item.remove({id: id}, (err, data)=>{
+    Invoice_item.remove({_id: id}, (err, data)=>{
         res.json(data)
     })
 })
 
 //USER / ADMIN
 
-app.get('/data/users', (req,res)=>{
+app.get('/api/users', (req,res)=>{
     try{
 		User.find({},(error, data)=>{
 			res.json(data);
@@ -276,7 +266,7 @@ app.get("/login", (req, res)=>{
     res.render('login')
 })
 
-app.get("/customer", (req, res)=>{
+app.get("/customers", (req, res)=>{
     res.render('customer')
 })
 

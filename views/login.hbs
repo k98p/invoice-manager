@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -5,69 +7,99 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <style>
+            .body {
+                position: absolute;
+                font-family: 'Roboto', san-serif;
+                font-style: normal;
+                margin: 0;
+                height: 100%;
+                width: 100%;
+                background: linear-gradient(180deg, #B71B1B 0%, #780B0B 99.99%, rgba(183, 27, 27, 0) 100%);
+            }
+            .submit_button{
+                width: 158px;
+                height: 50px;  
+                background: linear-gradient(180deg, #DC2C2C 0%, #FF3B3C 99.99%, rgba(183, 27, 27, 0) 100%);
+                border: none;
+                color: #FFFFFF;    
+            }
+            input{
+                border: 1px solid rgba(0, 0, 0, 0.2);
+                box-sizing: border-box;
+                height: 45px;
+            }
+            ::placeholder{
+                color: #C5C5C5;
+                Font Size: 12px;
+            }
+            #alert{
+                color:#DC2C2C;
+            }
+            .form-div{
+                background-color: #FFFFFF;
+            }
+            .logo{
+                margin-top: -75px;
+            }
+
+        </style>
     </head>
     <body>
-        <div class = "container">
-			<div id="form-div" class = "row">
-                <form name="user-login">
-                    <h6>LOGIN</h6>
-                    <div id="user-block">    
-                        <label for="username">Username</label>
-                        <input type="text" placeholder="Type Your Name" name="username" required>
+        <div class = "body container-fluid pt-6">
+            <div class="row h-100">
+                <div class = "form-div col-lg-4 col-md-6 col-8 mx-auto my-auto">
+                <div class="container-fluid">
+                    <div class="row" >
+                        <div class="col-lg-12 text-center logo">
+                        <img src="static/images/logo.png" height="125px" width="125px" alt="Itobuz" style="">
+                        </div>
                     </div>
-                    <div id="pass-block">
-                        <label for="password">Password</label>
-                        <input type="password" placeholder="********" name="password" required>
-                    </div>
-                    
-                    <div class="form-bottom">
-                        <small><a href="/">Forgot password?</a></small>
-					    <button type="button" onclick="login(this.form)">LOGIN</button>    
-                    </div>
-                </form>
-			</div>
-            <div id="alert"></div>	
+                    <form name="user-login" class="row">
+                        <div id="header-block" class="col-sm-12 text-center py-4">
+                            <h5>LOGIN</h5>
+                        </div>
+                        <div id="user-block" class="col-md-12 px-4 py-2">
+                            <div class="row">
+                                <div class="col-md-5 col-sm-12 my-auto">
+                                    <label for="username">Username</label>
+                                </div>
+                                <div class="col-md-7 col-sm-12">
+                                    <input type="text" class="form-control admin" placeholder="Type Your Name" name="username" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="pass-block" class="col-md-12 px-4 py-3">
+                            <div class="row">
+                                <div class="col-md-5 col-sm-12 my-auto">
+                                    <label for="password">Password</label>
+                                </div>
+                                <div class="col-md-7 col-sm-12">
+                                    <input type="password" class="form-control admin" placeholder="********" name="password" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="form-bottom-block" class="col col-lg-12 px-4 py-3 pb-4">
+                            <div class="row">
+                                <div class="col-sm-4 my-auto font-weight-bold" id="sign">
+                                    <a href="/" style="color: #DC2C2C;">Forgot password?</a>
+                                </div>
+                                <div class="col-sm-8 text-right">
+                                    <button type="button" onclick="login(this.form)" class="submit_button">Login</button>
+                                </div>
+                            </div>
+                            <div id="alert" class="col col-lg-12 text-center pt-4"></div>
+                        </div>
+                    </form>
+                </div>
+                </div>
+            </div>
+            <div id="alert"></div>
         </div>
-        <script>
-            var alertbox = document.getElementById("alert")
-
-            function login(frm){
-                if (frm.username.value.length === 0 || frm.password.value.length === 0){
-                    alertbox.innerHTML = "Username or Password field cannot be empty"
-                }
-                else{
-                    fetch('http://localhost:3000/api/users/login',{
-                        method: 'POST',
-                        body: JSON.stringify({
-                            "username": frm.username.value,
-                            "password": frm.password.value
-                        }),
-                        headers: {
-                            "Content-type": "application/json"
-                        }
-                    }).then(res=>{
-                        if (res.status===403){
-                            alertbox.innerHTML = "Username does not exist"
-                        }
-                        else{
-                            return res.json()
-                        }
-                    })
-                    .then((data)=>{
-                            console.log(data)    
-                            if (data.token===null){
-                                alertbox.innerHTML = "You've entered a wrong password"
-                            }
-                            else{
-                                localStorage.setItem("token", data.token)
-                                window.location = "./customer";  
-                            }
-                        })
-                }
-            }
-        </script>
     </body>
+    <script src="static/scripts/login.js"></script>
 </html>

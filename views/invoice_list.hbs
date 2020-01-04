@@ -10,178 +10,135 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
         <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <style>
+
+            html,body {
+                font-family: 'Roboto', san-serif;
+                font-style: normal;
+                font-size: 16px;
+            }
+
+            a{
+                font-weight: bold
+            }
+
+            .add_button{
+                width: 75px;
+                height: 45px;
+                background: linear-gradient(180deg, #DC2C2C 0%, #FF3B3C 99.99%, rgba(183, 27, 27, 0) 100%);
+                border: none;
+                color: #FFFFFF;
+            }
+
+            .submit_button{
+                width: 90px;
+                height: 45px;
+                background: linear-gradient(180deg, #DC2C2C 0%, #FF3B3C 99.99%, rgba(183, 27, 27, 0) 100%);
+                border: none;
+                color: #FFFFFF;
+            }
+
+            label{
+                font-weight: bold;
+            }
+
+            .warning{
+                color: #DC2C2C;
+            }
+
+            #total_value_div{
+                font-size: 14px;
+                font-weight: bold;
+                background-color: #FFD4D4;
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .interact{
+                border: none;
+                background-color: #FFFFFF;
+            }
+
+        </style>
     </head>
     <body>
         <div class="container">
-            <div id="top-form">
+            <header>
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="#"><img src="static/images/logo.png" height="46px" width="46px" alt="Itobuz"></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <span class="w-100"></span>
+                    <div class="collapse navbar-collapse navbarSupportedContent">
+                        <ul class="navbar-nav">
+                            <li class="nav-item px-2">
+                                <a class="nav-link" href="products">Products</a>
+                            </li>
+                            <li class="nav-item px-2">
+                                <a class="nav-link " href="customers">Customers</a>
+                            </li>
+                            <li class="nav-item px-2 active">
+                                <a class="nav-link" href="invoices">Invoices</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            <hr class="my-0">
+
+            <div id="top-form" class="py-4">
                 <form name="cust-details">
-                    <div id="name-block">    
-                        <label for="name">Customer Name</label>
-                        <select name="name" id="customer_names"></select>
+                    <div class="row">
+                        <div id="name-block" class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-5 my-auto pt-2">
+                                    <label for="name">Customer Name</label>
+                                </div>    
+                        
+                                <div class="col-md-7">
+                                    <select class="form-control" name="name" id="customer_names">
+                                        <option value="" class="lol" disabled selected>Select</option>
+                                    </select>
+                                </div> 
+                            </div>
+                        </div>
+                        <div id="discount-block" class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-4 my-auto pt-2">
+                                    <label for="discount">Discount</label>
+                                </div>    
+                        
+                                <div class="col-md-8">
+                                    <input class="form-control" placeholder="10" type="number" name="discount" id="discount" required></input>
+                                </div> 
+                            </div>
+                        </div>
+                        
                     </div>
-                
-                    <div id="discount-block">
-                        <label for="discount">Discount</label>
-                        <input type="text" id="discount_field" name="discount">
-                    </div>
+                    
                 </form>
             </div>
-            <input type="button" value="SUBMIT" onclick="add_invoice()">
-            <input type="button" value="ADD+" onclick="add_invoice_item()">
+            <div class="row">
+                <div class="warning col-sm-6"></div>
+                <div class = "button_fields col-sm-6 text-right">
+                    <input type="submit" class="submit_button" value="Submit" onclick="add_invoice()">
+                    <input type="button" class="add_button" value="Add+" onclick="add_invoice_item()">
+                
+                </div>
+            </div>
+            
             <hr>
             <div id="invoice-items-forms-div"></div>
-            <div id="total_value"></div>
+            <div id="total_value_div" class="py-3 px-3">
+                <span>TOTAL</span>
+                <span id="total_value"></span>
+            </div>
         </div>
 
-        <script>
-            fetch('http://localhost:3000/api/customers/', {
-                method: 'GET',
-                headers: {
-                    //"authorization": `jwt ${accesstoken_stored}` 
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                //console.log(data);
-                let names_option = document.getElementById('customer_names')
-                let buffer = ""
-                data.forEach((customer)=>{
-                    buffer += `<option value="${customer._id} ${customer.name}">${customer.name}</option>`
-                })
-                names_option.innerHTML = buffer;
-            })
-
-            let product_buffer = ""
-
-            fetch('http://localhost:3000/api/products/', {
-                method: 'GET',
-                headers: {
-                    //"authorization": `jwt ${accesstoken_stored}` 
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                //console.log(data);
-                data.forEach((product)=>{
-                    product_buffer += `<option value="${product._id}">${product.name}</option>`
-                    localStorage.setItem(product._id, product.price)
-                })
-            })
-
-            let invoice_id;
-
-            function add_invoice_item(){
-                let form_list = document.getElementById("invoice-items-forms-div");
-                if (form_list.innerHTML===""){
-
-                    let cus_details = document.getElementById("customer_names").value
-                    let cus_id = cus_details.split(' ')[0]
-                    let cus_name = cus_details.split(' ')[1]
-                    
-                    let disc_val = document.getElementById("discount_field").value
-                    if (cus_name!=="" && (disc_val>=0 && disc_val<=100)){
-                        fetch('http://localhost:3000/api/invoices/', {
-                            method: 'POST',
-                            headers: {
-                                "Content-type": "application/json; charset=UTF-8"   
-                                //"authorization": `jwt ${accesstoken_stored}` 
-                            },
-                            body: JSON.stringify({
-                                "customer_name": cus_name,
-                                "customer_id": cus_id,
-                                "discount": disc_val
-                            })
-                            
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            invoice_id = data._id
-                        })
-
-                        form_list.innerHTML +=  `<form name="invoice-items-details">
-                                                    <div class="name-block">    
-                                                        <label for="prod_name">Product Name</label>
-                                                        <select name="prod_name" class="product_names">${product_buffer}</select>
-                                                    </div>
-                                                
-                                                    <div class="quantity-block">
-                                                        <label for="quantity">Quantity</label>
-                                                        <input type="text" name="quantity">
-                                                    </div>
-
-                                                    <div class="submit-block">
-                                                        <input type="button" value="SELECT" onclick = "submit_invoice_item(this.form)">
-                                                    </div>
-
-                                                </form>`
-                    }
-                    else{
-                        alert("Customer Name cannot be empty and discount value should be between 0 and 100 inclusive")
-                    }
-                    document.getElementById("discount_field").setAttribute('readonly', true)
-                }
-                else{
-                    console.log(invoice_id)
-                    form_list.innerHTML +=  `<form name="invoice-items-details">
-                                                <div id="name-block">    
-                                                    <label for="prod_name">Product Name</label>
-                                                    <select name="prod_name" class="product_names">${product_buffer}</select>
-                                                </div>
-                                            
-                                                <div id="quantity-block">
-                                                    <label for="quantity">Quantity</label>
-                                                    <input type="text" name="quantity">
-                                                </div>
-
-                                                <div class="submit-block">
-                                                    <input type="button" value="SELECT" onclick = "submit_invoice_item(this.form)">
-                                                </div>
-                                            </form>`
-                    
-                }
-                
-            }
-
-            function submit_invoice_item(frm){
-                fetch('http://localhost:3000/api/invoices/' + invoice_id + '/items',{
-                    method: 'POST',
-                    body: JSON.stringify({
-                        "invoice_id": invoice_id,
-                        "product_id": frm.prod_name.value,
-                        "quantity": frm.quantity.value
-                    }),
-                    headers: {
-                        "Content-type": "application/json"
-                    }
-                }).then(res=>{
-                    return res.json()
-                })
-                .then((data)=>{
-                    console.log(data)
-                    document.getElementById("total_value").innerHTML = +document.getElementById("total_value").innerHTML + +localStorage.getItem(data.product_id)*data.quantity
-                
-                })
-            }
-
-            function add_invoice(){
-                fetch('http://localhost:3000/api/invoices/' + invoice_id, {
-                    method: 'PUT',
-                    headers: {
-                        "Content-type": "application/json"
-                        //"authorization": `jwt ${accesstoken_stored}` 
-                    },
-                    body: JSON.stringify({
-                        "total": +document.getElementById("total_value").innerHTML
-                    })
-                    
-                })
-                .then(res => res.json())
-                .then(data => {
-                    window.location = './invoices'
-                })
-            }
-
-        </script>
+        <script src="static/scripts/invoice_list.js"></script>
     </body>
 </html>
 
